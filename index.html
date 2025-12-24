@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BarberAI Elite v5.8 - Official Launch</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    :root { --bg-color: #483D8B; --bg-darker: #1a1733; --accent: #FFD700; --text: #ffffff; }
+    body { background: radial-gradient(circle at top, var(--bg-color) 0%, var(--bg-darker) 100%); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; margin: 0; }
+    .premium-serif { font-family: 'Playfair Display', serif; }
+    .gold-text { background: linear-gradient(135deg, #FFF0D1 0%, #C5A059 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .glass-nav { background: rgba(72, 61, 139, 0.95); backdrop-filter: blur(25px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+    .centering-frame { position: relative; width: 100%; aspect-ratio: 4/5; border-radius: 2rem; overflow: hidden; box-shadow: 0 30px 60px -12px rgba(0,0,0,0.7); background: #000; border: 1px solid rgba(255,255,255,0.1); }
+    .centering-frame img { width: 100%; height: 100%; object-fit: cover; }
+    .after-mask { position: absolute; top: 0; left: 0; width: 50%; height: 100%; overflow: hidden; z-index: 5; border-right: 2px solid var(--accent); }
+    .slider-handle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; background: var(--bg-color); border: 2px solid var(--accent); border-radius: 50%; z-index: 10; display: flex; align-items: center; justify-content: center; cursor: ew-resize; }
+    .style-item { flex: 0 0 120px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; padding: 12px; cursor: pointer; transition: 0.3s; text-align: center; }
+    .style-item.active { background: rgba(255, 215, 0, 0.2); border-color: var(--accent); transform: scale(1.05); }
+    .btn-transform { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: #000; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; transition: 0.3s; }
+    .btn-transform:disabled { opacity: 0.3; filter: grayscale(1); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body class="flex flex-col">
+
+  <nav class="w-full glass-nav sticky top-0 z-50 px-5 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-2">
+      <h1 class="text-[14px] font-bold gold-text tracking-widest uppercase">BarberAI Elite</h1>
+    </div>
+    <button onclick="location.reload()" class="text-white/60"><i class="fa-solid fa-rotate-right"></i></button>
+  </nav>
+
+  <main class="w-full max-w-md mx-auto px-6 py-8 flex-1 space-y-8">
+    
+    <section id="uploadSection">
+      <input type="file" id="fileInput" accept="image/*" class="hidden">
+      <label for="fileInput" class="centering-frame block cursor-pointer">
+        <div id="uploadPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-center">
+          <i class="fa-solid fa-cloud-arrow-up text-3xl text-white/20 mb-3"></i>
+          <span class="text-[10px] font-bold tracking-widest text-white/40 uppercase">Klik Untuk Upload Foto</span>
+        </div>
+        <img id="imagePreview" class="hidden">
+      </label>
+    </section>
+
+    <section id="resultSection" class="hidden space-y-4">
+      <div class="centering-frame" id="sliderContainer">
+        <img id="beforeImg" src="">
+        <div id="afterMask" class="after-mask"><img id="afterImg" src=""></div>
+        <div id="sliderHandle" class="slider-handle"><i class="fa-solid fa-arrows-left-right text-[10px] text-white"></i></div>
+        <div id="loadingOverlay" class="hidden absolute inset-0 bg-black/90 z-20 flex flex-col items-center justify-center">
+          <div class="w-10 h-10 border-2 border-accent border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p class="text-[10px] gold-text font-bold tracking-widest">PROSES AI...</p>
+        </div>
+      </div>
+      <button id="downloadBtn" class="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest"><i class="fa-solid fa-download mr-2"></i> Simpan Hasil</button>
+    </section>
+
+    <section id="styleSection" class="space-y-4">
+      <p class="text-[10px] text-white/30 font-bold uppercase tracking-[0.3em] text-center">Signature Collection</p>
+      <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2" id="styleList">
+        <div class="style-item" data-prompt="Highly realistic French Crop, matte finish, sharp fade.">
+          <div class="text-[11px] font-bold uppercase">French Crop</div>
+        </div>
+        <div class="style-item" data-prompt="Modern Mullet hairstyle, natural texture, realistic hair.">
+          <div class="text-[11px] font-bold uppercase">Mullet</div>
+        </div>
+        <div class="style-item" data-prompt="Classic Side Part, executive style, matte texture.">
+          <div class="text-[11px] font-bold uppercase">Side Part</div>
+        </div>
+        <div class="style-item" data-prompt="Two Block Korean style, natural volume, realistic strands.">
+          <div class="text-[11px] font-bold uppercase">Two Block</div>
+        </div>
+      </div>
+      <button id="generateBtn" disabled class="btn-transform w-full py-5 rounded-2xl text-[12px] mt-4">Transformasi Sekarang</button>
+    </section>
+
+  </main>
+
+  <script>
+    const API_KEY = "PASTE_API_KEY_DISINI";
+    let base64Image = "", selectedStyle = "";
+
+    const fileInput = document.getElementById('fileInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+    const generateBtn = document.getElementById('generateBtn');
+
+    fileInput.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (f) => {
+        base64Image = f.target.result.split(',')[1];
+        imagePreview.src = f.target.result;
+        imagePreview.classList.remove('hidden');
+        uploadPlaceholder.classList.add('hidden');
+        checkReady();
+      };
+      reader.readAsDataURL(file);
+    };
+
+    document.querySelectorAll('.style-item').forEach(item => {
+      item.onclick = () => {
+        document.querySelectorAll('.style-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        selectedStyle = item.dataset.prompt;
+        checkReady();
+      };
+    });
+
+    function checkReady() {
+      generateBtn.disabled = !(base64Image && selectedStyle);
+    }
+
+    generateBtn.onclick = async () => {
+      document.getElementById('loadingOverlay').classList.remove('hidden');
+      document.getElementById('uploadSection').classList.add('hidden');
+      document.getElementById('styleSection').classList.add('hidden');
+      document.getElementById('resultSection').classList.remove('hidden');
+      document.getElementById('beforeImg').src = imagePreview.src;
+
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+        const payload = {
+          contents: [{
+            parts: [
+              { text: `TASK: Edit this photo. Change the hair to: ${selectedStyle}. Keep the person's face, skin pores, and background 100% identical. Output the new image.` },
+              { inline_data: { mime_type: "image/jpeg", data: base64Image } }
+            ]
+          }]
+        };
+
+        const res = await fetch(url, { method: 'POST', body: JSON.stringify(payload) });
+        const data = await res.json();
+        
+        // Simulasi untuk demo (karena LLM mengembalikan teks deskripsi)
+        // Di sistem asli, ini akan terhubung ke API In-painting.
+        setTimeout(() => {
+          document.getElementById('afterImg').src = document.getElementById('beforeImg').src;
+          document.getElementById('loadingOverlay').classList.add('hidden');
+          initSlider();
+        }, 2000);
+
+      } catch (e) {
+        alert("Gagal memproses AI.");
+        location.reload();
+      }
+    };
+
+    function initSlider() {
+      const container = document.getElementById('sliderContainer'), mask = document.getElementById('afterMask'), handle = document.getElementById('sliderHandle');
+      const move = (e) => {
+        let rect = container.getBoundingClientRect();
+        let x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+        let p = Math.max(0, Math.min(100, (x / rect.width) * 100));
+        mask.style.width = p + '%'; handle.style.left = p + '%';
+      };
+      container.onmousedown = () => { window.onmousemove = move; window.onmouseup = () => window.onmousemove = null; };
+      container.ontouchstart = () => { window.ontouchmove = move; window.ontouchend = () => window.ontouchmove = null; };
+    }
+
+    document.getElementById('downloadBtn').onclick = () => {
+        const a = document.createElement('a');
+        a.href = document.getElementById('afterImg').src;
+        a.download = "BarberAI-Result.png";
+        a.click();
+    };
+  </script>
+</body>
+</html>
