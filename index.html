@@ -1,194 +1,24 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BarberAI Elite v5.8 - Google AI Studio Edition</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-    :root { --bg-color: #483D8B; --bg-darker: #1a1733; --accent: #FFD700; --text: #ffffff; }
-    body { background: radial-gradient(circle at top, var(--bg-color) 0%, var(--bg-darker) 100%); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; overscroll-behavior-y: contain; margin: 0; }
-    .premium-serif { font-family: 'Playfair Display', serif; }
-    .gold-text { background: linear-gradient(135deg, #FFF0D1 0%, #C5A059 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .glass-nav { background: rgba(72, 61, 139, 0.95); backdrop-filter: blur(25px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-    .centering-frame { position: relative; width: 100%; aspect-ratio: 4/5; border-radius: 2.5rem; overflow: hidden; box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.8); background: #000; border: 1px solid rgba(255, 255, 255, 0.1); }
-    .centering-frame img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
-    .after-mask { position: absolute; top: 0; left: 0; width: 50%; height: 100%; overflow: hidden; z-index: 5; border-right: 3px solid var(--accent); }
-    .slider-handle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 50px; background: #483D8B; border: 2px solid var(--accent); border-radius: 50%; z-index: 10; display: flex; align-items: center; justify-content: center; cursor: ew-resize; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
-    .style-item { flex: 0 0 130px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.5rem; padding: 14px; transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1); cursor: pointer; }
-    .style-item.active { background: rgba(255, 215, 0, 0.15); border-color: var(--accent); transform: translateY(-6px); }
-    .refine-btn { padding: 10px 4px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; font-size: 8px; font-weight: 800; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    .btn-transform { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: #000; font-weight: 900; letter-spacing: 0.15em; transition: 0.3s; text-transform: uppercase; }
-    .btn-transform:disabled { background: #333; color: #666; box-shadow: none; cursor: not-allowed; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BarberAI Elite - Hosted on Vercel</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
 </head>
-<body class="flex flex-col min-h-screen">
-
-  <nav class="w-full glass-nav sticky top-0 z-50 px-4 py-4 flex justify-between items-center">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 border border-white/20 rounded-full p-0.5 overflow-hidden bg-black/40">
-        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23FFD700' d='M256,16c-66.3,0-120,53.7-120,120v40c0,13.3,10.7,24,24,24h192c13.3,0,24-10.7,24-24v-40C376,69.7,322.3,16,256,16z'/%3E%3C/svg%3E" alt="Logo" class="w-full h-full object-cover rounded-full">
-      </div>
-      <div>
-        <h1 class="text-[12px] tracking-[0.2em] font-light uppercase">Barber<span class="font-bold gold-text">Elite</span></h1>
-        <p class="text-[7px] tracking-[0.1em] text-white/40 uppercase">v5.8 Google AI Studio Edition</p>
-      </div>
-    </div>
-    <button onclick="location.reload()" class="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10"><i class="fa-solid fa-rotate-right text-white"></i></button>
-  </nav>
-
-  <main class="w-full max-w-lg mx-auto px-5 mt-6 flex-1 space-y-8 pb-20">
-    <header class="text-center space-y-4 px-2">
-      <h2 class="premium-serif text-3xl italic">Kustomisasi Tekstur</h2>
-      <p class="text-white/50 text-[10px] tracking-[0.2em] uppercase">Penyempurnaan AI untuk tekstur rambut realistis.</p>
-    </header>
-
-    <section id="uploadSection" class="w-full">
-      <input type="file" id="fileInput" accept="image/*" class="hidden">
-      <label for="fileInput" class="centering-frame block cursor-pointer overflow-hidden relative group">
-        <div id="uploadPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-black/30 border border-white/10 rounded-[2.5rem]">
-          <i class="fa-solid fa-portrait text-2xl text-white/20 mb-5"></i>
-          <span class="text-[11px] font-black tracking-[0.4em] uppercase text-white/60">Upload Foto Wajah</span>
-        </div>
-        <img id="imagePreview" class="hidden absolute inset-0">
-      </label>
-    </section>
-
-    <section id="resultSection" class="hidden space-y-6">
-      <div class="centering-frame shadow-2xl" id="sliderContainer">
-        <img id="beforeImg" src="">
-        <div id="afterMask" class="after-mask"><img id="afterImg" src=""></div>
-        <div id="sliderHandle" class="slider-handle"><i class="fa-solid fa-arrows-left-right text-[12px] text-white"></i></div>
-        <div id="loadingOverlay" class="hidden absolute inset-0 bg-black/95 z-20 flex flex-col items-center justify-center text-center p-10">
-          <div class="w-12 h-12 border-t-2 border-accent rounded-full animate-spin mb-6"></div>
-          <h4 class="premium-serif text-2xl italic tracking-widest text-white/90">Merender Tekstur...</h4>
-        </div>
-      </div>
-      <button id="downloadBtn" class="w-full py-5 bg-white/5 border border-white/10 rounded-2xl text-[11px] font-bold uppercase tracking-[0.25em] flex items-center justify-center gap-3">
-        <i class="fa-solid fa-download gold-text"></i> Unduh Masterpiece
-      </button>
-    </section>
-
-    <section id="styleSection" class="space-y-4">
-      <p id="selectedLabel" class="text-lg premium-serif italic gold-text text-center">Pilih Karakter</p>
-      <div class="style-scroll no-scrollbar flex gap-3 overflow-x-auto pb-4 px-1" id="styleList">
-        <div class="style-item" data-prompt="Highly realistic matte French Crop, sharp skin fade. NO SHINE. Preserve skin pores 100%.">
-          <div class="text-[10px] font-bold uppercase mb-1">French Crop</div>
-          <div class="text-[8px] text-white/40 uppercase">Modern Matte</div>
-        </div>
-        <div class="style-item" data-prompt="Hyper-realistic matte Modern Mullet. Organic hair texture. 100% original skin pores.">
-          <div class="text-[10px] font-bold uppercase mb-1">Modern Mullet</div>
-          <div class="text-[8px] text-white/40 uppercase">Retro Natural</div>
-        </div>
-        <div class="style-item" data-prompt="Classic Side Part, natural dry hair texture. Keep skin identity identical.">
-          <div class="text-[10px] font-bold uppercase mb-1">Side Part</div>
-          <div class="text-[8px] text-white/40 uppercase">Eksekutif</div>
-        </div>
-        <div class="style-item" data-prompt="Korean Two Block style, natural layers. High-frequency skin detail preservation.">
-          <div class="text-[10px] font-bold uppercase mb-1">Two Block</div>
-          <div class="text-[8px] text-white/40 uppercase">K-Style</div>
-        </div>
-      </div>
-      <button id="generateBtn" disabled class="btn-transform w-full py-6 rounded-2xl text-[14px] shadow-2xl">Proses Transformasi AI</button>
-    </section>
-  </main>
-
-  <script>
-    const API_KEY = "AIzaSyDQYf78-Blfrsia_zLHMw7icST9Egqp9U8";
-    let base64Image = "", selectedStyle = "";
-
-    const fileInput = document.getElementById('fileInput');
-    const imagePreview = document.getElementById('imagePreview');
-    const uploadPlaceholder = document.getElementById('uploadPlaceholder');
-    const styleItems = document.querySelectorAll('.style-item');
-    const generateBtn = document.getElementById('generateBtn');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-
-    fileInput.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (f) => {
-          base64Image = f.target.result.split(',')[1];
-          imagePreview.src = f.target.result;
-          imagePreview.classList.remove('hidden');
-          uploadPlaceholder.classList.add('hidden');
-          checkReady();
-        };
-        reader.readAsDataURL(file);
-      }
-    };
-
-    styleItems.forEach(item => {
-      item.onclick = () => {
-        styleItems.forEach(i => i.classList.remove('active'));
-        item.classList.add('active');
-        selectedStyle = item.dataset.prompt;
-        document.getElementById('selectedLabel').innerText = item.querySelector('.font-bold').innerText;
-        checkReady();
-      };
-    });
-
-    function checkReady() {
-      generateBtn.disabled = !(base64Image && selectedStyle);
-    }
-
-    generateBtn.onclick = async () => {
-      loadingOverlay.classList.remove('hidden');
-      document.getElementById('uploadSection').classList.add('hidden');
-      document.getElementById('styleSection').classList.add('hidden');
-      document.getElementById('resultSection').classList.remove('hidden');
-      document.getElementById('beforeImg').src = imagePreview.src;
-
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-        const payload = {
-          contents: [{
-            parts: [
-              { text: `TASK: Edit this photo. Apply this hairstyle: ${selectedStyle}. Maintain 100% facial identity and skin texture. NO SKIN BLUR.` },
-              { inline_data: { mime_type: "image/jpeg", data: base64Image } }
-            ]
-          }]
-        };
-
-        const res = await fetch(url, { method: 'POST', body: JSON.stringify(payload) });
-        const data = await res.json();
-        
-        // Catatan: Gemini 1.5 saat ini mengembalikan teks. 
-        // Baris ini mensimulasikan hasil agar UI slider tetap bekerja.
-        setTimeout(() => {
-          document.getElementById('afterImg').src = document.getElementById('beforeImg').src;
-          loadingOverlay.classList.add('hidden');
-          initSlider();
-        }, 2000);
-
-      } catch (e) {
-        alert("Gagal terhubung ke Google AI Studio.");
-        location.reload();
-      }
-    };
-
-    function initSlider() {
-      const container = document.getElementById('sliderContainer'), mask = document.getElementById('afterMask'), handle = document.getElementById('sliderHandle');
-      const move = (e) => {
-        let rect = container.getBoundingClientRect();
-        let x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-        let p = Math.max(0, Math.min(100, (x / rect.width) * 100));
-        mask.style.width = p + '%'; handle.style.left = p + '%';
-      };
-      container.onmousedown = () => { window.onmousemove = move; window.onmouseup = () => window.onmousemove = null; };
-      container.ontouchstart = () => { window.ontouchmove = move; window.ontouchend = () => window.ontouchmove = null; };
-    }
-
-    document.getElementById('downloadBtn').onclick = () => {
-      const a = document.createElement('a');
-      a.href = document.getElementById('afterImg').src;
-      a.download = "BarberAI-Result.png";
-      a.click();
-    };
-  </script>
+<body>
+    <iframe src="https://ai.studio/apps/drive/1uSwg3802h4skZrwJFgvcZjcwp-sGwvcd?fullscreenApplet=true"></iframe>
 </body>
 </html>
