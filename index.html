@@ -3,172 +3,519 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BarberAI Elite v5.8 - Official Launch</title>
+  <title>BarberAI Elite v5.8 - Texture & Realism</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-    :root { --bg-color: #483D8B; --bg-darker: #1a1733; --accent: #FFD700; --text: #ffffff; }
-    body { background: radial-gradient(circle at top, var(--bg-color) 0%, var(--bg-darker) 100%); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; margin: 0; }
+
+    :root {
+      --bg-color: #483D8B; 
+      --bg-darker: #1a1733;
+      --card-bg: rgba(255, 255, 255, 0.08);
+      --accent: #FFD700; 
+      --text: #ffffff;
+    }
+
+    body {
+      background: radial-gradient(circle at top, var(--bg-color) 0%, var(--bg-darker) 100%);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overscroll-behavior-y: contain;
+    }
+
     .premium-serif { font-family: 'Playfair Display', serif; }
-    .gold-text { background: linear-gradient(135deg, #FFF0D1 0%, #C5A059 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .glass-nav { background: rgba(72, 61, 139, 0.95); backdrop-filter: blur(25px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-    .centering-frame { position: relative; width: 100%; aspect-ratio: 4/5; border-radius: 2rem; overflow: hidden; box-shadow: 0 30px 60px -12px rgba(0,0,0,0.7); background: #000; border: 1px solid rgba(255,255,255,0.1); }
-    .centering-frame img { width: 100%; height: 100%; object-fit: cover; }
-    .after-mask { position: absolute; top: 0; left: 0; width: 50%; height: 100%; overflow: hidden; z-index: 5; border-right: 2px solid var(--accent); }
-    .slider-handle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; background: var(--bg-color); border: 2px solid var(--accent); border-radius: 50%; z-index: 10; display: flex; align-items: center; justify-content: center; cursor: ew-resize; }
-    .style-item { flex: 0 0 120px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; padding: 12px; cursor: pointer; transition: 0.3s; text-align: center; }
-    .style-item.active { background: rgba(255, 215, 0, 0.2); border-color: var(--accent); transform: scale(1.05); }
-    .btn-transform { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: #000; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; transition: 0.3s; }
-    .btn-transform:disabled { opacity: 0.3; filter: grayscale(1); }
+
+    .gold-text {
+      background: linear-gradient(135deg, #FFF0D1 0%, #C5A059 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .glass-nav {
+      background: rgba(72, 61, 139, 0.95);
+      backdrop-filter: blur(25px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Auto-Centering Frame Logic */
+    .centering-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4/5;
+      border-radius: 2.5rem;
+      overflow: hidden;
+      box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.8);
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .centering-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; 
+      object-position: center 25%; 
+    }
+
+    .after-mask {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 5;
+      border-right: 3px solid var(--accent);
+    }
+
+    .slider-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      background: #483D8B;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: ew-resize;
+      box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    }
+
+    .style-item {
+      flex: 0 0 130px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1.5rem;
+      padding: 14px;
+      transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+      cursor: pointer;
+    }
+
+    .style-item.active {
+      background: rgba(255, 215, 0, 0.15);
+      border-color: var(--accent);
+      transform: translateY(-6px);
+    }
+
+    /* Refine Buttons Grid */
+    .refine-btn {
+      padding: 10px 4px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      font-size: 8px;
+      font-weight: 800;
+      text-transform: uppercase;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .refine-btn:active { background: var(--accent); color: #000; transform: scale(0.95); }
+
+    .btn-transform {
+      background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
+      color: #000;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 15px 40px rgba(184, 134, 11, 0.5);
+      text-transform: uppercase;
+    }
+    .btn-transform:disabled { background: #333; color: #666; box-shadow: none; cursor: not-allowed; border: 1px solid #444; }
+
     .no-scrollbar::-webkit-scrollbar { display: none; }
+    
+    .nav-btn {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 12, 35, 0.98);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(15px);
+    }
   </style>
 </head>
-<body class="flex flex-col">
+<body class="flex flex-col min-h-screen">
 
-  <nav class="w-full glass-nav sticky top-0 z-50 px-5 py-4 flex justify-between items-center">
-    <div class="flex items-center gap-2">
-      <h1 class="text-[14px] font-bold gold-text tracking-widest uppercase">BarberAI Elite</h1>
+  <!-- Modal Admin Branding -->
+  <div id="adminModal" class="modal-backdrop px-4">
+    <div class="modal-content bg-[#2a2452] border border-accent p-8 rounded-[2.5rem] w-full max-w-[340px] text-center shadow-2xl">
+      <h3 class="premium-serif text-2xl gold-text mb-2">Master Key</h3>
+      <p class="text-[10px] text-white/50 uppercase tracking-[0.2em]">Otorisasi Branding Diperlukan</p>
+      <input type="password" id="masterKeyInput" class="w-full bg-black/40 border border-white/10 text-white p-3 rounded-xl mt-4 text-center outline-none focus:border-accent" placeholder="••••••••">
+      <p id="modalError" class="text-red-400 text-[9px] uppercase font-bold mt-2 hidden">Kunci Master Salah</p>
+      <div class="flex gap-3 mt-6">
+        <button id="cancelAdmin" class="flex-1 py-3 text-[10px] font-bold uppercase tracking-widest text-white/40">Batal</button>
+        <button id="confirmAdmin" class="flex-1 py-3 bg-white text-[#483D8B] text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-lg">Simpan</button>
+      </div>
     </div>
-    <button onclick="location.reload()" class="text-white/60"><i class="fa-solid fa-rotate-right"></i></button>
+  </div>
+
+  <!-- Navigasi -->
+  <nav class="w-full glass-nav sticky top-0 z-50 px-4 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <div id="logoContainer" class="w-10 h-10 border border-white/20 rounded-full p-0.5 overflow-hidden cursor-pointer relative group bg-black/40">
+        <img id="appLogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23FFD700' d='M256,16c-66.3,0-120,53.7-120,120v40c0,13.3,10.7,24,24,24h192c13.3,0,24-10.7,24-24v-40C376,69.7,322.3,16,256,16z'/%3E%3C/svg%3E" alt="Logo" class="w-full h-full object-cover rounded-full">
+        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+          <i class="fa-solid fa-crown text-[10px] text-white"></i>
+        </div>
+        <input type="file" id="logoInput" accept="image/*" class="hidden">
+      </div>
+      <div>
+        <h1 class="text-[12px] tracking-[0.2em] font-light uppercase">Barber<span class="font-bold gold-text">Elite</span></h1>
+        <p class="text-[7px] tracking-[0.1em] text-white/40 uppercase">v5.8 Texture Pro</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <button id="resetSelectionBtn" class="nav-btn" title="Hapus Hasil & Pilihan (Foto Tetap)"><i class="fa-solid fa-trash-can text-[10px] text-white/60"></i></button>
+      <button id="reloadFullBtn" class="nav-btn" title="Reload (Mulai Awal)"><i class="fa-solid fa-rotate-right text-[10px] text-white"></i></button>
+    </div>
   </nav>
 
-  <main class="w-full max-w-md mx-auto px-6 py-8 flex-1 space-y-8">
+  <main class="w-full max-w-lg mx-auto px-5 mt-6 flex-1 space-y-8">
     
-    <section id="uploadSection">
+    <header class="text-center space-y-4 px-2">
+      <h2 class="premium-serif text-3xl md:text-4xl italic">Kustomisasi Tekstur</h2>
+      <p class="text-white/50 text-[10px] tracking-[0.2em] uppercase max-w-[300px] mx-auto leading-relaxed">Penyempurnaan AI untuk tekstur rambut ikal hingga keriting yang realistis.</p>
+    </header>
+
+    <!-- Area Pratinjau (Auto-Centered) -->
+    <section id="uploadSection" class="w-full">
       <input type="file" id="fileInput" accept="image/*" class="hidden">
-      <label for="fileInput" class="centering-frame block cursor-pointer">
-        <div id="uploadPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-center">
-          <i class="fa-solid fa-cloud-arrow-up text-3xl text-white/20 mb-3"></i>
-          <span class="text-[10px] font-bold tracking-widest text-white/40 uppercase">Klik Untuk Upload Foto</span>
+      <label for="fileInput" class="centering-frame block cursor-pointer overflow-hidden relative group transition-all duration-500 shadow-2xl">
+        <div id="uploadPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-black/30 border border-white/10 rounded-[2.5rem]">
+          <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-700">
+            <i class="fa-solid fa-portrait text-2xl text-white/20"></i>
+          </div>
+          <span class="text-[11px] font-black tracking-[0.4em] uppercase text-white/60">Upload Foto Wajah</span>
         </div>
-        <img id="imagePreview" class="hidden">
+        <img id="imagePreview" class="hidden absolute inset-0">
       </label>
     </section>
 
-    <section id="resultSection" class="hidden space-y-4">
-      <div class="centering-frame" id="sliderContainer">
-        <img id="beforeImg" src="">
-        <div id="afterMask" class="after-mask"><img id="afterImg" src=""></div>
-        <div id="sliderHandle" class="slider-handle"><i class="fa-solid fa-arrows-left-right text-[10px] text-white"></i></div>
-        <div id="loadingOverlay" class="hidden absolute inset-0 bg-black/90 z-20 flex flex-col items-center justify-center">
-          <div class="w-10 h-10 border-2 border-accent border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p class="text-[10px] gold-text font-bold tracking-widest">PROSES AI...</p>
+    <!-- Studio Hasil (Auto-Centered) -->
+    <section id="resultSection" class="hidden space-y-6">
+      <div class="flex justify-between items-center px-1">
+        <button id="backToStylesBtn" class="text-[10px] font-black text-white/50 hover:text-white tracking-[0.2em] uppercase transition-all flex items-center">
+          <i class="fa-solid fa-chevron-left mr-2"></i> Ganti Gaya
+        </button>
+        <span class="text-[10px] gold-text font-black tracking-[0.2em] uppercase">Refinement Studio</span>
+      </div>
+
+      <div class="centering-frame shadow-2xl" id="sliderContainer">
+        <img id="beforeImg" src="" alt="Sebelum">
+        <div id="afterMask" class="after-mask">
+          <img id="afterImg" src="" alt="Sesudah">
+        </div>
+        <div id="sliderHandle" class="slider-handle">
+          <i class="fa-solid fa-arrows-left-right text-[12px] text-white"></i>
+        </div>
+
+        <div id="loadingOverlay" class="hidden absolute inset-0 bg-black/95 z-20 flex flex-col items-center justify-center text-center p-10">
+          <div class="w-12 h-12 border-t-2 border-[#FFD700] rounded-full animate-spin mb-6"></div>
+          <h4 class="premium-serif text-2xl italic tracking-widest text-white/90" id="loadingText">Merender Tekstur...</h4>
         </div>
       </div>
-      <button id="downloadBtn" class="w-full py-4 rounded-xl bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest"><i class="fa-solid fa-download mr-2"></i> Simpan Hasil</button>
+
+      <!-- Refinement Studio (New Features) -->
+      <div class="space-y-4">
+        <div class="grid grid-cols-4 gap-2">
+          <button class="refine-btn" data-refine="Highly realistic individual hair ikal strands, defined curls, natural movement. NO SKIN BLUR.">
+            <i class="fa-solid fa-spiral-reflection text-accent"></i> Ikal
+          </button>
+          <button class="refine-btn" data-refine="Natural wavy hair texture, soft S-waves, organic volume matching original photo lighting. NO SHINE.">
+            <i class="fa-solid fa-water text-accent"></i> Bergelombang
+          </button>
+          <button class="refine-btn" data-refine="Tightly coiled keriting texture, afro-realistic curls, natural roots. PRESERVE EVERY SKIN PORE.">
+            <i class="fa-solid fa-braid text-accent"></i> Keriting
+          </button>
+          <button class="refine-btn" data-refine="Remove all artificial shine. Apply natural matte finish to hair strands. Match image noise.">
+            <i class="fa-solid fa-brush text-accent"></i> Matte
+          </button>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <button class="refine-btn" data-refine="Thin the hair density significantly. Keep face identity identical. NO PIXEL MOVEMENT.">
+            <i class="fa-solid fa-layer-group text-accent"></i> Tipiskan
+          </button>
+          <button class="refine-btn" data-refine="Trim the hair length slightly shorter. Professional barber edges. Keep original face sharp.">
+            <i class="fa-solid fa-scissors text-accent"></i> Pendek
+          </button>
+          <button class="refine-btn" data-refine="Sleek straight hair texture without heavy product. High resolution skin preservation.">
+            <i class="fa-solid fa-ruler-vertical text-accent"></i> Lurus
+          </button>
+        </div>
+      </div>
+
+      <button id="downloadBtn" class="w-full py-5 bg-white/5 border border-white/10 rounded-2xl text-[11px] font-bold tracking-[0.25em] uppercase flex items-center justify-center gap-3 transition-all active:scale-95">
+        <i class="fa-solid fa-download gold-text"></i> Unduh Masterpiece
+      </button>
     </section>
 
+    <!-- Katalog Signature -->
     <section id="styleSection" class="space-y-4">
-      <p class="text-[10px] text-white/30 font-bold uppercase tracking-[0.3em] text-center">Signature Collection</p>
-      <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2" id="styleList">
-        <div class="style-item" data-prompt="Highly realistic French Crop, matte finish, sharp fade.">
-          <div class="text-[11px] font-bold uppercase">French Crop</div>
+      <div class="flex justify-between items-end border-b border-white/10 pb-3 px-1">
+        <div>
+          <h3 class="text-[9px] font-bold text-white/30 uppercase tracking-[0.4em]">Signature Collection</h3>
+          <p id="selectedLabel" class="text-lg premium-serif mt-0.5 italic gold-text">Pilih Karakter</p>
         </div>
-        <div class="style-item" data-prompt="Modern Mullet hairstyle, natural texture, realistic hair.">
-          <div class="text-[11px] font-bold uppercase">Mullet</div>
+        <span class="text-[8px] text-white/20 font-mono tracking-tighter">11 SIGNATURES</span>
+      </div>
+      
+      <div class="style-scroll no-scrollbar flex gap-3 overflow-x-auto pb-4 px-1" id="styleList">
+        <div class="style-item" data-prompt="Highly realistic matte French Crop, sharp skin fade. NO SHINE. Preserve skin pores 100%.">
+          <div class="text-[10px] font-bold uppercase mb-1">French Crop</div>
+          <div class="text-[8px] text-white/40 uppercase">Modern Matte</div>
         </div>
-        <div class="style-item" data-prompt="Classic Side Part, executive style, matte texture.">
-          <div class="text-[11px] font-bold uppercase">Side Part</div>
+        <div class="style-item" data-prompt="Hyper-realistic matte Modern Mullet. Organic hair texture. 100% original skin pores. NO plastic glow.">
+          <div class="text-[10px] font-bold uppercase mb-1">Modern Mullet</div>
+          <div class="text-[8px] text-white/40 uppercase">Retro Natural</div>
         </div>
-        <div class="style-item" data-prompt="Two Block Korean style, natural volume, realistic strands.">
-          <div class="text-[11px] font-bold uppercase">Two Block</div>
+        <div class="style-item" data-prompt="Classic Side Part, natural dry hair texture. Keep skin identity identical. NO high-gloss.">
+          <div class="text-[10px] font-bold uppercase mb-1">Side Part</div>
+          <div class="text-[8px] text-white/40 uppercase">Eksekutif</div>
+        </div>
+        <div class="style-item" data-prompt="Skin Fade buzz cut, matte scalp. Every skin pore must remain sharp. Identity preserved.">
+          <div class="text-[10px] font-bold uppercase mb-1">Skin Fade</div>
+          <div class="text-[8px] text-white/40 uppercase">Minimalis</div>
+        </div>
+        <div class="style-item" data-prompt="90s style Curtains, matte medium length. Maintain exact face pixels. Soft realistic movement.">
+          <div class="text-[10px] font-bold uppercase mb-1">Curtains</div>
+          <div class="text-[8px] text-white/40 uppercase">Vintage</div>
+        </div>
+        <div class="style-item" data-prompt="Sharp Undercut, matte long top. Do not smooth facial skin. Authentic volume and anchor.">
+          <div class="text-[10px] font-bold uppercase mb-1">Undercut</div>
+          <div class="text-[8px] text-white/40 uppercase">Kontras</div>
+        </div>
+        <div class="style-item" data-prompt="Realistic matte Mohawk, spiked strip. NO synthetic sheen. Skin detail retention priority.">
+          <div class="text-[10px] font-bold uppercase mb-1">Mohawk</div>
+          <div class="text-[8px] text-white/40 uppercase">Punk Elite</div>
+        </div>
+        <div class="style-item" data-prompt="Messy Spiky hair, dry matte. Face skin must remain authentic and sharp. Zero identity change.">
+          <div class="text-[10px] font-bold uppercase mb-1">Spiky</div>
+          <div class="text-[8px] text-white/40 uppercase">Dynamic</div>
+        </div>
+        <div class="style-item" data-prompt="Mid Fade, realistic matte transition. Identity preservation 100%. Match noise to original photo.">
+          <div class="text-[10px] font-bold uppercase mb-1">Mid Fade</div>
+          <div class="text-[8px] text-white/40 uppercase">Standar</div>
+        </div>
+        <div class="style-item" data-prompt="Korean Two Block style, natural layers. High-frequency skin detail preservation.">
+          <div class="text-[10px] font-bold uppercase mb-1">Two Block</div>
+          <div class="text-[8px] text-white/40 uppercase">K-Style</div>
+        </div>
+        <div class="style-item" data-prompt="High volume matte Quiff. Face and background must remain sharp. Professional integration.">
+          <div class="text-[10px] font-bold uppercase mb-1">Quiff</div>
+          <div class="text-[8px] text-white/40 uppercase">Volume</div>
         </div>
       </div>
-      <button id="generateBtn" disabled class="btn-transform w-full py-5 rounded-2xl text-[12px] mt-4">Transformasi Sekarang</button>
     </section>
+
+    <div id="ctaContainer" class="pt-4 pb-16">
+      <button id="generateBtn" disabled class="btn-transform w-full py-6 rounded-2xl text-[14px] shadow-2xl">
+        Proses Transformasi AI
+      </button>
+    </div>
 
   </main>
 
-  <script>
-    const API_KEY = "AIzaSyDQYf78-Blfrsia_zLHMw7icST9Egqp9U8";
-    let base64Image = "", selectedStyle = "";
+  <footer class="w-full py-12 text-center border-t border-white/5 bg-black/20 mt-auto">
+    <p class="text-[13px] text-white font-bold tracking-[0.2em] uppercase">powered by : muhjamilz ☕</p>
+  </footer>
 
-    const fileInput = document.getElementById('fileInput');
-    const imagePreview = document.getElementById('imagePreview');
-    const uploadPlaceholder = document.getElementById('uploadPlaceholder');
-    const generateBtn = document.getElementById('generateBtn');
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js';
+    import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js';
+    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js';
+
+    const firebaseConfig = JSON.parse(__firebase_config);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'barber-elite-v58';
+    const apiKey = "AIzaSyDQYf78-Blfrsia_zLHMw7icST9Egqp9U8"; 
+
+    let user = null, base64Image = null, selectedStyle = null, isProcessing = false, pendingLogo = null, currentResultBase64 = null;
+
+    const startAuth = async () => {
+      if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
+      else await signInAnonymously(auth);
+    };
+    startAuth();
+
+    onAuthStateChanged(auth, (u) => {
+      user = u;
+      if (user) {
+        onSnapshot(doc(db, 'artifacts', appId, 'public', 'data', 'branding'), (snap) => {
+          if (snap.exists() && snap.data().logoUrl) document.getElementById('appLogo').src = snap.data().logoUrl;
+        });
+      }
+    });
+
+    document.getElementById('reloadFullBtn').onclick = () => window.location.reload();
+    
+    document.getElementById('resetSelectionBtn').onclick = () => {
+      selectedStyle = null;
+      currentResultBase64 = null;
+      document.querySelectorAll('.style-item').forEach(i => i.classList.remove('active'));
+      document.getElementById('selectedLabel').innerText = "Pilih Karakter";
+      document.getElementById('resultSection').classList.add('hidden');
+      document.getElementById('uploadSection').classList.remove('hidden');
+      document.getElementById('styleSection').classList.remove('hidden');
+      document.getElementById('ctaContainer').classList.remove('hidden');
+      updateBtn();
+    };
+
+    // Master Branding Logic
+    const logoContainer = document.getElementById('logoContainer'), logoInput = document.getElementById('logoInput'), adminModal = document.getElementById('adminModal'), masterKeyInput = document.getElementById('masterKeyInput'), confirmAdmin = document.getElementById('confirmAdmin');
+    logoContainer.onclick = () => logoInput.click();
+    logoInput.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const r = new FileReader();
+        r.onload = (f) => { pendingLogo = f.target.result; adminModal.style.display = 'flex'; };
+        r.readAsDataURL(file);
+      }
+    };
+    confirmAdmin.onclick = async () => {
+      const key = masterKeyInput.value.trim();
+      if (!key || !user) return;
+      try {
+        const ref = doc(db, 'artifacts', appId, 'public', 'data', 'branding'), snap = await getDoc(ref);
+        if (!snap.exists() || !snap.data().masterKey || snap.data().masterKey === key) {
+          await setDoc(ref, { masterKey: key, logoUrl: pendingLogo }, { merge: true });
+          adminModal.style.display = 'none';
+          alert("Branding Diperbarui!");
+        } else document.getElementById('modalError').classList.remove('hidden');
+      } catch (e) { console.error(e); }
+    };
+    document.getElementById('cancelAdmin').onclick = () => adminModal.style.display = 'none';
+
+    // Core application logic
+    const fileInput = document.getElementById('fileInput'), imagePreview = document.getElementById('imagePreview'), uploadPlaceholder = document.getElementById('uploadPlaceholder'), styleItems = document.querySelectorAll('.style-item'), generateBtn = document.getElementById('generateBtn'), resultSection = document.getElementById('resultSection'), uploadSection = document.getElementById('uploadSection'), styleSection = document.getElementById('styleSection'), ctaContainer = document.getElementById('ctaContainer'), loadingOverlay = document.getElementById('loadingOverlay'), loadingText = document.getElementById('loadingText'), afterImg = document.getElementById('afterImg'), beforeImg = document.getElementById('beforeImg'), downloadBtn = document.getElementById('downloadBtn'), selectedLabel = document.getElementById('selectedLabel');
 
     fileInput.onchange = (e) => {
       const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (f) => {
-        base64Image = f.target.result.split(',')[1];
-        imagePreview.src = f.target.result;
-        imagePreview.classList.remove('hidden');
-        uploadPlaceholder.classList.add('hidden');
-        checkReady();
-      };
-      reader.readAsDataURL(file);
-    };
-
-    document.querySelectorAll('.style-item').forEach(item => {
-      item.onclick = () => {
-        document.querySelectorAll('.style-item').forEach(i => i.classList.remove('active'));
-        item.classList.add('active');
-        selectedStyle = item.dataset.prompt;
-        checkReady();
-      };
-    });
-
-    function checkReady() {
-      generateBtn.disabled = !(base64Image && selectedStyle);
-    }
-
-    generateBtn.onclick = async () => {
-      document.getElementById('loadingOverlay').classList.remove('hidden');
-      document.getElementById('uploadSection').classList.add('hidden');
-      document.getElementById('styleSection').classList.add('hidden');
-      document.getElementById('resultSection').classList.remove('hidden');
-      document.getElementById('beforeImg').src = imagePreview.src;
-
-      try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-        const payload = {
-          contents: [{
-            parts: [
-              { text: `TASK: Edit this photo. Change the hair to: ${selectedStyle}. Keep the person's face, skin pores, and background 100% identical. Output the new image.` },
-              { inline_data: { mime_type: "image/jpeg", data: base64Image } }
-            ]
-          }]
+      if (file) {
+        const r = new FileReader();
+        r.onload = (f) => {
+          base64Image = f.target.result.split(',')[1];
+          imagePreview.src = f.target.result;
+          imagePreview.classList.remove('hidden');
+          uploadPlaceholder.classList.add('hidden');
+          updateBtn();
         };
-
-        const res = await fetch(url, { method: 'POST', body: JSON.stringify(payload) });
-        const data = await res.json();
-        
-        // Simulasi untuk demo (karena LLM mengembalikan teks deskripsi)
-        // Di sistem asli, ini akan terhubung ke API In-painting.
-        setTimeout(() => {
-          document.getElementById('afterImg').src = document.getElementById('beforeImg').src;
-          document.getElementById('loadingOverlay').classList.add('hidden');
-          initSlider();
-        }, 2000);
-
-      } catch (e) {
-        alert("Gagal memproses AI.");
-        location.reload();
+        r.readAsDataURL(file);
       }
     };
 
-    function initSlider() {
-      const container = document.getElementById('sliderContainer'), mask = document.getElementById('afterMask'), handle = document.getElementById('sliderHandle');
-      const move = (e) => {
-        let rect = container.getBoundingClientRect();
-        let x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-        let p = Math.max(0, Math.min(100, (x / rect.width) * 100));
-        mask.style.width = p + '%'; handle.style.left = p + '%';
+    styleItems.forEach(item => {
+      item.onclick = () => {
+        styleItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        selectedStyle = { name: item.querySelector('.font-bold').innerText, prompt: item.dataset.prompt };
+        selectedLabel.innerText = selectedStyle.name;
+        updateBtn();
       };
-      container.onmousedown = () => { window.onmousemove = move; window.onmouseup = () => window.onmousemove = null; };
-      container.ontouchstart = () => { window.ontouchmove = move; window.ontouchend = () => window.ontouchmove = null; };
+    });
+
+    const updateBtn = () => generateBtn.disabled = !(base64Image && selectedStyle && !isProcessing);
+
+    async function callAI(p, imgBase64) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`;
+      const r = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: p }, { inlineData: { mimeType: "image/png", data: imgBase64 } }] }],
+          generationConfig: { responseModalities: ["IMAGE"] }
+        })
+      });
+      const data = await r.json();
+      return data.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
     }
 
-    document.getElementById('downloadBtn').onclick = () => {
-        const a = document.createElement('a');
-        a.href = document.getElementById('afterImg').src;
-        a.download = "BarberAI-Result.png";
-        a.click();
+    generateBtn.onclick = async () => {
+      if (isProcessing) return;
+      isProcessing = true; updateBtn();
+      uploadSection.classList.add('hidden'); styleSection.classList.add('hidden'); ctaContainer.classList.add('hidden');
+      resultSection.classList.remove('hidden'); loadingOverlay.classList.remove('hidden');
+      loadingText.innerText = "Menenun Helai Realistik...";
+      beforeImg.src = imagePreview.src;
+
+      const prompt = `${selectedStyle.prompt}. TECHNICAL GUIDELINES: 1. Render highly realistic hair. 2. DO NOT smooth face skin or pores. 3. Output must be pixel-perfect identical alignment. No framing change.`;
+
+      try {
+        const resBase = await callAI(prompt, base64Image);
+        if (resBase) {
+          currentResultBase64 = resBase;
+          afterImg.src = `data:image/png;base64,${resBase}`;
+          afterImg.onload = () => { loadingOverlay.classList.add('hidden'); initSlider(); };
+        }
+      } catch (e) { alert("Gagal."); resetToStyles(); }
+      finally { isProcessing = false; updateBtn(); }
     };
+
+    // Refinement Studio Logic
+    document.querySelectorAll('.refine-btn').forEach(btn => {
+      btn.onclick = async () => {
+        if (isProcessing || !currentResultBase64) return;
+        isProcessing = true;
+        loadingOverlay.classList.remove('hidden');
+        loadingText.innerText = "Menyesuaikan Tekstur...";
+        const refinePrompt = `${btn.dataset.refine} RULES: Maintain 100% facial identity preservation. Every pore and skin detail must remain sharp. NO PIXEL MOVEMENT.`;
+        try {
+          const resBase = await callAI(refinePrompt, currentResultBase64);
+          if (resBase) {
+            currentResultBase64 = resBase;
+            afterImg.src = `data:image/png;base64,${resBase}`;
+            afterImg.onload = () => loadingOverlay.classList.add('hidden');
+          }
+        } catch (e) { alert("Gagal."); loadingOverlay.classList.add('hidden'); }
+        finally { isProcessing = false; }
+      };
+    });
+
+    function resetToStyles() {
+      resultSection.classList.add('hidden'); uploadSection.classList.remove('hidden'); styleSection.classList.remove('hidden'); ctaContainer.classList.remove('hidden');
+    }
+
+    function initSlider() {
+      const container = document.getElementById('sliderContainer'), mask = document.getElementById('afterMask'), handle = document.getElementById('sliderHandle');
+      const update = (cX) => {
+        const rect = container.getBoundingClientRect();
+        let p = Math.max(0, Math.min(100, ((cX - rect.left) / rect.width) * 100));
+        mask.style.width = `${p}%`; handle.style.left = `${p}%`;
+      };
+      const move = (e) => update(e.touches ? e.touches[0].clientX : e.clientX);
+      container.onmousedown = () => { window.addEventListener('mousemove', move); window.onmouseup = () => window.removeEventListener('mousemove', move); };
+      container.ontouchstart = () => { window.addEventListener('touchmove', move); window.ontouchend = () => window.removeEventListener('touchmove', move); };
+      mask.style.width = '50%'; handle.style.left = '50%';
+    }
+
+    document.getElementById('backToStylesBtn').onclick = resetToStyles;
+    downloadBtn.onclick = () => { if (afterImg.src) { const a = document.createElement('a'); a.href = afterImg.src; a.download = `BarberElite-Result.png`; a.click(); } };
   </script>
 </body>
 </html>
+
